@@ -1,0 +1,28 @@
+{
+  "name": "p8emberjs",
+  "title": "p8emberjs",
+  "description": "plus8.ch emberjs framework",
+  "version": "0.5.1",
+  "homepage": "plus8.ch",
+  "author": {
+    "name": "Claudio Romano",
+    "email": "claudio.romano@plus8.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://claudiocro@bitbucket.org/claudiocro/p8emberjs.git"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "plus8.ch/blob/master/LICENSE-GPL"
+    }
+  ],
+  "dependencies": {
+    "jquery": "1.7.2"
+  },
+  "keywords": []
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>p8emberjs-ui TableView demo 1</title>
+
+
+  <script type="text/javascript" language="javascript" src="../../libs/jquery/jquery.js"></script>
+  <script type="text/javascript" src="../../libs/emberjs/handlebars-1.0.rc.1.js"></script>
+  <script type="text/javascript" src="../../libs/emberjs/ember-1.0.beta.2.js"></script>
+  <script type="text/javascript" src="../../src/p8emberjs-ds.js"></script>
+  <script type="text/javascript" src="../../src/p8emberjs-ui.js"></script>
+ 
+  <script type="text/javascript" language="javascript">
+  	  var App = Em.Application.create();
+  
+  	  var PersonModel = P8DS.Model.extend({
+        properties : [ 'id', 'name', 'lastname', 'date'],
+        fullname:function() {
+          return this.get('name') + " " + this.get('lastname'); 
+        }.property('name', 'firstname').cacheable()
+      });
+  	  
+  	  App.PersonListView = P8UI.TableView.extend({
+  	    columns: ['name','lastname','fullname','date'],
+  	    columnsMeta : { 
+  	        name:{ headerWidth:'25%', headerValue:'Name'},
+  	        lastname:{ headerWidth:'25%', headerValue:'Lastname'},
+  	        fullname:{ headerWidth:'25%', headerValue:'Fullname'},
+  	        date:{ headerWidth:'25%', headerValue:'Date'}
+  	    }
+  	  });
+  	  
+  	  App.personListView = App.PersonListView.create({
+  	    templateName : 'personListView',
+  	    content:[{"name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00"},
+  	             {"name":"Beppe","lastname":"Rossi", "date":"2012-01-10 00:00:00"}]
+  	  }).appendTo('#personListView');
+  	  
+      $(document).ready(function() {
+
+      });
+    </script>
+</head>
+
+<body>
+<div id="wrapper">
+  <div id="personListView">
+  	
+  </div>
+</div>
+ 
+</body>
+</html>
