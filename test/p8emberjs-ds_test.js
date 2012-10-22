@@ -26,21 +26,22 @@
   
   var P8TESTDS = Ember.Namespace.create();
   window.P8TESTDS = P8TESTDS;
+
+  P8TESTDS.PersonModel = P8DS.Model.extend({
+    properties : [ 'id', 'name', 'lastname', 'date'],
+    fullname:function() {
+      return this.get('name') + " " + this.get('lastname'); 
+    }.property('name', 'firstname').cacheable()
+  });
+  
+  
+  P8TESTDS.PersonGroupModel = P8DS.Model.extend({
+    properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]']
+  });
+  
   
   test('create', 10, function() {
 
-    P8TESTDS.PersonModel = P8DS.Model.extend({
-      properties : [ 'id', 'name', 'lastname', 'date'],
-      fullname:function() {
-        return this.get('name') + " " + this.get('lastname'); 
-      }.property('name', 'firstname').cacheable()
-    });
-    
-    
-    P8TESTDS.PersonGroupModel = P8DS.Model.extend({
-      properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]']
-    });
-    
     var personGroupModel = P8TESTDS.PersonGroupModel.create();
     personGroupModel.extend({"tags":['tagA', 'tagB'],'persons':[
       {"name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00"},
@@ -60,6 +61,19 @@
     ok(personGroupModel.get('tags') instanceof Ember.ArrayProxy, 'array instance of Ember.ArrayProxy');
     equal(personGroupModel.get('tags.length'), 2, 'array length');
     equal(personGroupModel.get('tags').objectAt(1), "tagB", 'objectarray object member compare');
+  });
+  
+  test('appendProperty', 2, function() {
+    P8TESTDS.PersonModel.reopen({
+      additionalPropMyTags: "myTags[]"
+    });
+    var personModel = P8TESTDS.PersonModel.create({"ID":"1","name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00"});
+    
+    equal(personModel.get('myTags.length'), 0);
+    
+    personModel.get('myTags').addObject('a');
+    equal(personModel.get('myTags.length'), 1);
+    
   });
 
   module('P8DS.Store');

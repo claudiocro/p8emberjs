@@ -85,14 +85,38 @@
     init: function() {
       this._super();
       for(var i=0; i<this.properties.length; i++) {
+        this._appendProperty(this.properties[i]);
+        /*
         if( this.properties[i].substring(this.properties[i].length-2,this.properties[i].length) === '[]' ) { //simple array
           this.set(stripPropname(this.properties[i]), Ember.ArrayProxy.create({content:[]}));
         } 
         else if(this.properties[i].substring(this.properties[i].length-1,this.properties[i].length) === ']' ) { //object array
           this.set(stripPropname(this.properties[i]), Ember.ArrayProxy.create(P8DS.ILoadable, {content:[]}));
         }
+        */
+      }
+      for(var prop in this) {
+        if(prop.indexOf('additionalProp') === 0) {
+          this.appendProperty(this[prop]);
+        }
       }
     },
+    
+    
+    _appendProperty: function(prop) {
+      if( prop.substring(prop.length-2,prop.length) === '[]' ) { //simple array
+        this.set(stripPropname(prop), Ember.ArrayProxy.create({content:[]}));
+      } 
+      else if(prop.substring(prop.length-1,prop.length) === ']' ) { //object array
+        this.set(stripPropname(prop), Ember.ArrayProxy.create(P8DS.ILoadable, {content:[]}));
+      }
+    },
+    
+    appendProperty: function(prop) {
+      this.properties.pushObject(prop);
+      this._appendProperty(prop);
+    },
+    
     extend: function(o) {
       
      /* var arrayObjectClass = null;
