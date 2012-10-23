@@ -12,6 +12,11 @@
     "type": "git",
     "url": "https://claudiocro@bitbucket.org/claudiocro/p8emberjs.git"
   },
+  
+  "scripts": {
+    "test": "grunt travis --verbose"
+  }
+  
   "bugs": {
     "url": ""
   },
