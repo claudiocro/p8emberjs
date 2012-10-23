@@ -14,8 +14,8 @@
     columns: null,
     columnsMeta: null,
     classNames: ['p8ui-tableView'],
-    childViews: ['headerView', 'bodyView']
-   
+    childViews: ['headerView', 'bodyView'],
+    clickItem: null
   });
   
   P8UI.TableView.reopen({
@@ -51,6 +51,7 @@
     
     bodyView:  Ember.computed(function() {
       return P8UI.CollectionView.create({
+        clickItem: this.get('clickItem'),
         content: Ember.computed(function() {
           return get(this.get('tableView'), 'content');
         }).property('tableView.content.@each').cacheable(),
@@ -58,21 +59,29 @@
         columns: get(this, 'columns')
       });
     }).property()
+    
   });
   
 
 
   P8UI.CollectionView = Ember.CollectionView.extend({
     tagName: 'tbody',
+    clickItem: null,
     itemViewClass: Ember.View.extend({
       template: Ember.computed(function(){
         var bodyTpl = "";
         for(var i=0; i<this.get('parentView.columns').length; i++) {
-          bodyTpl += '<td class="col-'+i+'"><p>{{view.content.'+this.get('parentView.columns')[i]+'}}</p></td>';
+          bodyTpl += '<td {{action "_clickItem" target="view" on="click"}}  class="col-'+i+'"><p>{{view.content.'+this.get('parentView.columns')[i]+'}}</p></td>';
         }
         return Ember.Handlebars.compile(bodyTpl);
-      })
+      }),
+      _clickItem: function() {
+        if(this.get('parentView').clickItem !== null) {
+          this.get('parentView').clickItem(this.get('content'));
+        }
+      }
     })
+    
   });
 
   
