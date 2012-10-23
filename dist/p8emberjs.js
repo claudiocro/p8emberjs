@@ -1,4 +1,4 @@
-/*! p8emberjs - v0.5.1 - 2012-10-23
+/*! p8emberjs - v0.5.2 - 2012-10-23
 * plus8.ch
 * Copyright (c) 2012 Claudio Romano; Licensed GPL */
 
