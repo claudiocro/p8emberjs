@@ -1,3 +1,5 @@
+#!/bin/bash
+
 is_command_in_path() {
     command -v $1 > /dev/null;
 }
