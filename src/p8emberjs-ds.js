@@ -50,8 +50,12 @@
       return this._idIdx[id];
     },
     put: function(o) {
-      this.pushObject(o);
-      this._idIdx[o.id] = this.get('length')-1; 
+      if(this._idIdx[o.id] !== undefined) {
+        this.pushObject(o);
+        this._idIdx[o.id] = this.get('length')-1;
+      } else {
+        this.re
+      }
     }
   });
   
