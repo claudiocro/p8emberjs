@@ -77,13 +77,14 @@
   });
 
   module('P8DS.Store');
-  test('put-get', 2, function() {
+  test('put-get', 3, function() {
     var store = P8DS.Store.create({});
     store.put({id:3,value:'Value3'});
     store.put({id:1,value:'Value1'});
     store.put({id:2,value:'Value2'});
     
     equal(store.indexOfId(3), 0, 'indexOfId');
+    equal(store.indexOfId(10), undefined, 'indexOfId not existent');
     equal(store.find(2).value, 'Value2', 'find'); 
     
   });
