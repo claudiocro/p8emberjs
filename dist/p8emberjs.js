@@ -6,7 +6,7 @@
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2012-10-28 18:21:25 +0100
+ * Date: 2012-10-28 19:14:09 +0100
  */
 
 (function() {
@@ -86,10 +86,28 @@
     
   };
   
+  var stripObject = function(definition) {
+    var startIdx = definition.indexOf('{')+1;
+    
+    
+    //check only -1? why -2 ??
+    var endIdx;
+    if(definition.substring(definition.length-1,definition.length)) {
+      endIdx = definition.length-1;
+      return definition.substr(startIdx,endIdx-startIdx);
+    }
+    
+    return undefined;
+    
+  };
+  
   var stripPropname = function(definition) {
     var endIdx = definition.indexOf('[');
     if(endIdx<0) {
-      return definition;
+      endIdx = definition.indexOf('{');
+      if(endIdx<0) {
+        return definition;
+      }
     }
 
     return definition.substr(0,endIdx);
@@ -139,7 +157,9 @@
       
       function make_creator_handler(arrayObjectClass) {
         return function (item) {
-            return arrayObjectClass.create(item);
+            var o = arrayObjectClass.create();
+            o.updateFrom(item);
+            return o;
         };
       }
       
@@ -159,6 +179,16 @@
             this.get(propname).pushObjects(o[propname].map(make_creator_handler(arrayObjectClass)));
           }
         } 
+        else if( this.properties[i].substring(this.properties[i].length-1,this.properties[i].length) === '}' ) { //object
+          if(o[propname] !== undefined) {
+            var objectName = stripObject(this.properties[i]);
+            var objectClass = Ember.get(this, objectName, false) || Ember. get(window, objectName);
+            
+            var n = objectClass.create();
+            n.updateFrom(o[propname]);
+            this.set(propname, n);
+          }
+        }
         else {
           if(o[this.properties[i]] !== undefined) {
             this.set(this.properties[i], o[this.properties[i]]);

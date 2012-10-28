@@ -36,16 +36,17 @@
   
   
   P8TESTDS.PersonGroupModel = P8DS.Model.extend({
-    properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]', 'fake']
+    properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]', 'fake', 'chief{P8TESTDS.PersonModel}']
   });
   
   
-  test('create', 12, function() {
+  test('create', 15, function() {
 
     var personGroupModel = P8TESTDS.PersonGroupModel.create();
     personGroupModel.updateFrom({"tags":['tagA', 'tagB'],'persons':[
       {"name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00","fake":"nope"},
-      {"name":"Beppe","lastname":"Rossi", "date":"2012-01-10 00:00:00"}]
+      {"name":"Beppe","lastname":"Rossi", "date":"2012-01-10 00:00:00"}],
+      "chief":{"name":"Beppea","lastname":"Rossia", "date":"2012-01-15 00:00:00"}
     });
     var personModel = P8TESTDS.PersonModel.create({"ID":"1","name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00", "fake":"nope"});
     
@@ -53,6 +54,8 @@
     equal(personModel.get('lastname'), "Muster", 'get lastname');
     equal(personModel.get('fullname'), "Hans Muster", 'get fullname');
     equal(personModel.get('fake'), "nope", 'not defined property');
+    ok(personGroupModel.get('chief') instanceof P8TESTDS.PersonModel, 'child object instance of P8TESTDS.PersonModel');
+    equal(personGroupModel.get('chief.lastname'), "Rossia", 'child object lastname');
     
     ok(personGroupModel.get('persons') instanceof Ember.ArrayProxy, 'objectarray instance of Ember.ArrayProxy');
     equal(personGroupModel.get('persons.length'), 2, 'objectarray length');
@@ -63,6 +66,9 @@
     ok(personGroupModel.get('tags') instanceof Ember.ArrayProxy, 'array instance of Ember.ArrayProxy');
     equal(personGroupModel.get('tags.length'), 2, 'array length');
     equal(personGroupModel.get('tags').objectAt(1), "tagB", 'objectarray object member compare');
+    
+    
+    ok(personGroupModel.get('persons') instanceof Ember.ArrayProxy, 'objectarray instance of Ember.ArrayProxy');
   });
   
   test('appendProperty', 2, function() {
