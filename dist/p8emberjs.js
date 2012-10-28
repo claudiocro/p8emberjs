@@ -1,6 +1,13 @@
-/*! p8emberjs - v0.5.2 - 2012-10-27
-* plus8.ch
-* Copyright (c) 2012 Claudio Romano; Licensed GPL */
+/*!
+ * p8emberjs - v0.5.3
+ * plus8.ch
+ * 
+ * Copyright (c) 2012, Claudio Romano
+ * Licensed Apache-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Date: 2012-10-28 15:11:00 +0100
+ */
 
 (function() {
   var P8DS = Ember.Namespace.create();

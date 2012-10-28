@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://claudiocro@bitbucket.org/claudiocro/p8emberjs.git"
+    "url": "https://github.com/claudiocro/p8emberjs.git"
   },
   
   "scripts": {
@@ -22,8 +22,8 @@
   },
   "licenses": [
     {
-      "type": "GPL",
-      "url": "plus8.ch/blob/master/LICENSE-GPL"
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   ],
   "dependencies": {
