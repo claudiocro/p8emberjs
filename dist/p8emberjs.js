@@ -6,7 +6,7 @@
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2012-10-28 15:11:00 +0100
+ * Date: 2012-10-28 18:21:25 +0100
  */
 
 (function() {
@@ -61,8 +61,12 @@
       return this._idIdx[id];
     },
     put: function(o) {
-      this.pushObject(o);
-      this._idIdx[o.id] = this.get('length')-1; 
+      if(this._idIdx[o.id] === undefined) {
+        this.pushObject(o);
+        this._idIdx[o.id] = this.get('length')-1;
+      } else {
+        this.insertAt(this._idIdx[o.id], o);
+      }
     }
   });
   
@@ -128,7 +132,7 @@
       this._appendProperty(prop);
     },
     
-    extend: function(o) {
+    updateFrom: function(o) {
       
      /* var arrayObjectClass = null;
       */

@@ -36,27 +36,29 @@
   
   
   P8TESTDS.PersonGroupModel = P8DS.Model.extend({
-    properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]']
+    properties : [ 'tags[]', 'persons[P8TESTDS.PersonModel]', 'fake']
   });
   
   
-  test('create', 10, function() {
+  test('create', 12, function() {
 
     var personGroupModel = P8TESTDS.PersonGroupModel.create();
-    personGroupModel.extend({"tags":['tagA', 'tagB'],'persons':[
-      {"name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00"},
+    personGroupModel.updateFrom({"tags":['tagA', 'tagB'],'persons':[
+      {"name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00","fake":"nope"},
       {"name":"Beppe","lastname":"Rossi", "date":"2012-01-10 00:00:00"}]
     });
-    var personModel = P8TESTDS.PersonModel.create({"ID":"1","name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00"});
+    var personModel = P8TESTDS.PersonModel.create({"ID":"1","name":"Hans","lastname":"Muster", "date":"2012-12-11 00:00:00", "fake":"nope"});
     
     equal(personModel.get('name'), "Hans", 'get name');
     equal(personModel.get('lastname'), "Muster", 'get lastname');
     equal(personModel.get('fullname'), "Hans Muster", 'get fullname');
+    equal(personModel.get('fake'), "nope", 'not defined property');
     
     ok(personGroupModel.get('persons') instanceof Ember.ArrayProxy, 'objectarray instance of Ember.ArrayProxy');
     equal(personGroupModel.get('persons.length'), 2, 'objectarray length');
     ok(personGroupModel.get('persons').objectAt(0) instanceof P8TESTDS.PersonModel, 'objectarray instance of member');
     equal(personGroupModel.get('persons').objectAt(1).get('fullname'), "Beppe Rossi", 'objectarray object member compare');
+    equal(personGroupModel.get('persons').objectAt(1).get('fake'), undefined, 'objectarray object member compare undefined');
     
     ok(personGroupModel.get('tags') instanceof Ember.ArrayProxy, 'array instance of Ember.ArrayProxy');
     equal(personGroupModel.get('tags.length'), 2, 'array length');
@@ -77,7 +79,7 @@
   });
 
   module('P8DS.Store');
-  test('put-get', 3, function() {
+  test('put-get', 4, function() {
     var store = P8DS.Store.create({});
     store.put({id:3,value:'Value3'});
     store.put({id:1,value:'Value1'});
@@ -85,7 +87,10 @@
     
     equal(store.indexOfId(3), 0, 'indexOfId');
     equal(store.indexOfId(10), undefined, 'indexOfId not existent');
-    equal(store.find(2).value, 'Value2', 'find'); 
+    equal(store.find(2).value, 'Value2', 'find');
+    
+    store.put({id:3,value:'Value3a'});
+    equal(store.find(3).value, 'Value3a', 'find aber overwriting the object');
     
   });
   
