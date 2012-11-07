@@ -1,12 +1,12 @@
 /*!
- * p8emberjs - v0.5.4
+ * p8emberjs - v0.5.6
  * plus8.ch
  * 
  * Copyright (c) 2012, Claudio Romano
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2012-11-06 17:04:12 +0100
+ * Date: 2012-11-07 12:27:07 +0100
  */
 
 (function() {
