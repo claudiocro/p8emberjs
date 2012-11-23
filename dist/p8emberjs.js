@@ -6,7 +6,7 @@
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2012-11-07 12:27:07 +0100
+ * Date: 2012-11-09 17:26:52 +0100
  */
 
 (function() {
@@ -99,7 +99,7 @@
         template: Ember.computed(function() {
           var bodyTpl = "<tr>";
           for(var i=0; i<this.get('columns').length; i++) {
-            var col = this.get('columns')[i];
+            var col = this.get('columns')[i].replace(".",'');
             bodyTpl += '<th class="col-'+i+'"';
             if(get(this, 'columnsMeta.'+col+'.headerWidth') !== undefined && get(this, 'columnsMeta.'+col+'.headerWidth')) {
               bodyTpl += ' style="width: '+get(this, 'columnsMeta.'+col+'.headerWidth')+';"';  

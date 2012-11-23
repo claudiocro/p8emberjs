@@ -27,7 +27,7 @@
         template: Ember.computed(function() {
           var bodyTpl = "<tr>";
           for(var i=0; i<this.get('columns').length; i++) {
-            var col = this.get('columns')[i];
+            var col = this.get('columns')[i].replace(".",'');
             bodyTpl += '<th class="col-'+i+'"';
             if(get(this, 'columnsMeta.'+col+'.headerWidth') !== undefined && get(this, 'columnsMeta.'+col+'.headerWidth')) {
               bodyTpl += ' style="width: '+get(this, 'columnsMeta.'+col+'.headerWidth')+';"';  

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>p8js Test Suite</title>
+  <!-- Load local jQuery, removing access to $ (use jQuery, not $). -->
+  <script src="../libs/jquery/jquery.js"></script>
+  <script src="../libs/emberjs/handlebars-1.0.0.beta.6.js"></script>
+  <script src="../libs/emberjs/ember-1.0.0-pre.2.js"></script>
+  <script>jQuery.noConflict()</script>
+  <!-- Load local QUnit (grunt requires v1.0.0 or newer). -->
+  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+  <script src="../libs/qunit/qunit.js"></script>
+  <script src="../libs/p8/p8js-jquery.js"></script>
+  <!-- Load local lib and tests. -->
+  <script src="../src/p8emberjs-core.js"></script>
+  <script src="p8core_helpers_test.js"></script>
+</head>
+<body>
+  <h1 id="qunit-header">p8core handlebar helpers Test Suite</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture">
+    <span class="lame">lame test markup</span>
+    <span class="normal">normal test markup</span>
+    <span class="awesome">awesome test markup</span>
+    
+    <form id="form1">
+  		<input id="input1" type="text" title="MyValue" />
+  		<input id="input2" type="text" title="MyValue2" value="Real Value2"/>
+  	</form>
+  	
+  </div>
+</body>
+</html>
