@@ -71,7 +71,7 @@
       template: Ember.computed(function(){
         var bodyTpl = "";
         for(var i=0; i<this.get('parentView.columns').length; i++) {
-          bodyTpl += '<td {{action "_clickItem" target="view" on="click"}}  class="col-'+i+'"><p>{{view.content.'+this.get('parentView.columns')[i]+'}}</p></td>';
+          bodyTpl += '<td {{action "_clickItem" target="view" on="click"}}  class="col-'+i+'"><p>'+this.getValueTmpl(i)+'</p></td>';
         }
         return Ember.Handlebars.compile(bodyTpl);
       }),
@@ -79,6 +79,10 @@
         if(this.get('parentView').clickItem !== null) {
           this.get('parentView').clickItem(this.get('content'));
         }
+      },
+      
+     getValueTmpl: function(column) {
+        return '{{view.content.'+this.get('parentView.columns')[column]+'}}';
       }
     })
     
