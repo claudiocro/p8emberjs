@@ -6,20 +6,20 @@
   <title>p8emberjs-ui TableView demo 1</title>
 
 
-  <script type="text/javascript" language="javascript" src="../../libs/jquery/jquery.js"></script>
+  <script type="text/javascript" src="../../libs/jquery/jquery.js"></script>
   <script type="text/javascript" src="../../libs/emberjs/handlebars-1.0.0.beta.6.js"></script>
   <script type="text/javascript" src="../../libs/emberjs/ember-1.0.0-pre.2.js"></script>
   <script type="text/javascript" src="../../src/p8emberjs-ds.js"></script>
   <script type="text/javascript" src="../../src/p8emberjs-ui.js"></script>
  
-  <script type="text/javascript" language="javascript">
+  <script type="text/javascript">
   	  var App = Em.Application.create();
   
   	 
   	  App.PersonListView = P8UI.TableView.extend({
   	    columns: ['name','lastname','fullname','date', 'info.info1'],
   	    columnsMeta : { 
-  	        name:{ headerWidth:'25%', headerValue:'Name'},
+  	        name:{ headerWidth:'25%', headerValue:'Name', clickable:true},
   	        lastname:{ headerWidth:'25%', headerValue:'Lastname'},
   	        fullname:{ headerWidth:'25%', headerValue:'Fullname'},
   	        date:{ headerWidth:'15%', headerValue:'Date'},

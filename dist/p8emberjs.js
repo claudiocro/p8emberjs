@@ -2,11 +2,11 @@
  * p8emberjs - v0.5.6
  * plus8.ch
  * 
- * Copyright (c) 2012, Claudio Romano
+ * Copyright (c) 2013, Claudio Romano
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2012-11-23 13:46:35 +0100
+ * Date: 2013-01-14 00:15:24 +0100
  */
 
 (function() {
@@ -149,6 +149,7 @@
     bodyView:  Ember.computed(function() {
       return P8UI.CollectionView.create({
         clickItem: this.get('clickItem'),
+        columnsMeta: this.get('columnsMeta'),
         content: Ember.computed(function() {
           return get(this.get('tableView'), 'content');
         }).property('tableView.content.@each').cacheable(),
@@ -164,11 +165,12 @@
   P8UI.CollectionView = Ember.CollectionView.extend({
     tagName: 'tbody',
     clickItem: null,
+    columnsMeta: null,
     itemViewClass: Ember.View.extend({
       template: Ember.computed(function(){
         var bodyTpl = "";
         for(var i=0; i<this.get('parentView.columns').length; i++) {
-          bodyTpl += '<td {{action "_clickItem" target="view" on="click"}}  class="col-'+i+'"><p>{{view.content.'+this.get('parentView.columns')[i]+'}}</p></td>';
+          bodyTpl += '<td class="col-'+i+'">'+this.getValueTmpl(i)+'</td>';
         }
         return Ember.Handlebars.compile(bodyTpl);
       }),
@@ -176,11 +178,28 @@
         if(this.get('parentView').clickItem !== null) {
           this.get('parentView').clickItem(this.get('content'));
         }
+      },
+      
+     getValueTmpl: function(column) {
+        //console.log(this.get('columnsMeta.'+column+'.headerWidth'));
+        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column]);
+        var value = '';
+        if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
+          value += '<a href="#" {{action _clickItem target="view"}}>';
+        }
+        
+        value += '{{view.content.'+this.get('parentView.columns')[column]+'}}';
+        
+        if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
+          value += '</a>';
+        }
+        
+        return value;
       }
     })
     
   });
-
+  
   
   P8UI.ScrollView = Ember.View.extend({
     classNames: ['p8ui-scrollView'],
