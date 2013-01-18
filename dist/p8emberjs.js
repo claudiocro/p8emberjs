@@ -1,12 +1,12 @@
 /*!
- * p8emberjs - v0.5.6
+ * p8emberjs - v0.5.7
  * plus8.ch
  * 
  * Copyright (c) 2013, Claudio Romano
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2013-01-14 00:15:24 +0100
+ * Date: 2013-01-18 14:44:22 +0100
  */
 
 (function() {
@@ -182,7 +182,7 @@
       
      getValueTmpl: function(column) {
         //console.log(this.get('columnsMeta.'+column+'.headerWidth'));
-        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column]);
+        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column].replace(".",''));
         var value = '';
         if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
           value += '<a href="#" {{action _clickItem target="view"}}>';

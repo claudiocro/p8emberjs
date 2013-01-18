@@ -85,7 +85,7 @@
       
      getValueTmpl: function(column) {
         //console.log(this.get('columnsMeta.'+column+'.headerWidth'));
-        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column]);
+        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column].replace(".",''));
         var value = '';
         if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
           value += '<a href="#" {{action _clickItem target="view"}}>';
