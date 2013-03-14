@@ -1,4 +1,5 @@
-# p8js [![Build Status](https://secure.travis-ci.org/claudiocro/p8emberjs.png)](http://secure.travis-ci.org/claudiocro/p8emberjs)
+# p8js [![Build Status](https://travis-ci.org/claudiocro/p8emberjs.png?branch=master)](https://travis-ci.org/claudiocro/p8emberjs)
+
 
 plus8.ch js framework
 
