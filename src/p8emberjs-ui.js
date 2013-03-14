@@ -20,7 +20,7 @@
   
   P8UI.TableView.reopen({
     headerView: Ember.computed(function() {
-      return Ember.View.create({
+      return Ember.View.extend({
         tagName: 'thead',
         columns: get(this, 'columns'),
         columnsMeta: get(this, 'columnsMeta'),
@@ -46,19 +46,20 @@
           bodyTpl += "</tr>";
           return Ember.Handlebars.compile(bodyTpl);
         })
-      });
+      }).create();
     }).property(),
     
     bodyView:  Ember.computed(function() {
-      return P8UI.CollectionView.create({
+      return P8UI.CollectionView.extend({
         clickItem: this.get('clickItem'),
         columnsMeta: this.get('columnsMeta'),
         content: Ember.computed(function() {
           return get(this.get('tableView'), 'content');
-        }).property('tableView.content.@each').cacheable(),
+        }).property('tableView.content').cacheable(),
         tableView: this,
         columns: get(this, 'columns')
-      });
+      }).create();
+      //return Ember.View.create();
     }).property()
     
   });

@@ -6,7 +6,7 @@
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2013-01-18 14:44:22 +0100
+ * Date: 2013-03-14 01:18:45 +0100
  */
 
 (function() {
@@ -117,7 +117,7 @@
   
   P8UI.TableView.reopen({
     headerView: Ember.computed(function() {
-      return Ember.View.create({
+      return Ember.View.extend({
         tagName: 'thead',
         columns: get(this, 'columns'),
         columnsMeta: get(this, 'columnsMeta'),
@@ -143,19 +143,20 @@
           bodyTpl += "</tr>";
           return Ember.Handlebars.compile(bodyTpl);
         })
-      });
+      }).create();
     }).property(),
     
     bodyView:  Ember.computed(function() {
-      return P8UI.CollectionView.create({
+      return P8UI.CollectionView.extend({
         clickItem: this.get('clickItem'),
         columnsMeta: this.get('columnsMeta'),
         content: Ember.computed(function() {
           return get(this.get('tableView'), 'content');
-        }).property('tableView.content.@each').cacheable(),
+        }).property('tableView.content').cacheable(),
         tableView: this,
         columns: get(this, 'columns')
-      });
+      }).create();
+      //return Ember.View.create();
     }).property()
     
   });
