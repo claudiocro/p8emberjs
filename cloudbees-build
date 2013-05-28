@@ -14,4 +14,5 @@ export phantomjs=$(pwd)/jenkins-onbuild/phantomjs-1.7.0-linux-i686/bin
 PATH=$PATH:$(pwd)/jenkins-onbuild/phantomjs-1.7.0-linux-i686/bin
 
 npm install
+npm install -g grunt-cli
 npm test
