@@ -5,27 +5,31 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     meta: {
-      banner: '/*!\n'+
-      ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %>' + "\n" +
-      ' <%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
-      ' * ' + "\n" +
-      ' * Copyright (c) <%= grunt.template.today("yyyy") %>, <%= pkg.author.name %>' + "\n" +
-      ' * Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %>' + "\n"+
-      ' * <%= _.pluck(pkg.licenses, "url").join(", ") %>' + "\n"+
-      ' * ' + "\n" +
-      ' * Date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>' + "\n" +
-      ' */'
+        banner: '/*!\n'+
+        ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %>' + "\n" +
+        ' <%= pkg.homepage ? "* " + pkg.homepage ' + "\n" + ' : "" %>' +
+        ' * ' + "\n" +
+        ' * Copyright (c) <%= grunt.template.today("yyyy") %>, <%= pkg.author.name %>' + "\n" +
+        ' * Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %>' + "\n"+
+        ' * <%= _.pluck(pkg.licenses, "url").join(", ") %>' + "\n"+
+        ' * ' + "\n" +
+        ' * Date: <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>' + "\n" +
+        ' */'
     },
     concat: {
+      options: {
+        // define a string to put between each file in the concatenated output
+        banner: '<%= meta.banner %>',
+        separator: ';'
+      },
       dist: {
-        src: ['<banner:meta.banner>', 'src/**/*.js'],
+        src: ['src/**/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
     uglify: {
       options: {
-        // the banner is inserted at the top of the output
-        banner: '<banner:meta.banner>'
+        preserveComments: "some"
       },
       dist: {
         files: {

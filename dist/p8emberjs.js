@@ -1,4 +1,12 @@
-(function() {
+/*!
+ * p8emberjs - v0.5.8
+ * plus8.ch * 
+ * Copyright (c) 2013, Claudio Romano
+ * Licensed Apache-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Date: 2013-05-29 02:13:58 +0200
+ */(function() {
   var P8Ember = Ember.Namespace.create();
   window.P8Ember = P8Ember;
 
@@ -22,8 +30,7 @@
     }
   });
 
-}());
-(function() {
+}());;(function() {
   var P8DS = Ember.Namespace.create();
   window.P8DS = P8DS;
   
@@ -83,8 +90,7 @@
       }
     }
   });
-}());
-(function() {
+}());;(function() {
   var get = Ember.get;
   
   window.P8UI = Ember.Namespace.create();
