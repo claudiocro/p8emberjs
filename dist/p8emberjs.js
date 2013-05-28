@@ -6,34 +6,9 @@
  * Licensed Apache-2.0
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Date: 2013-03-14 01:18:45 +0100
+ * Date: 2013-05-27 08:21:10 -0400
  */
 
-(function() {
-  var P8Ember = Ember.Namespace.create();
-  window.P8Ember = P8Ember;
-
-}());
-
-
-
-(function() {
-  
-  Ember.Handlebars.registerHelper('p8formatDate', function(path, options) {
-    var rawDate = this.get(path);
-    if(rawDate === undefined) {
-      return undefined;
-    } 
-    else {
-      if(options.hash.time !== undefined) {
-        return rawDate.p8DeDate(true);
-      } else {
-        return rawDate.p8DeDate();
-      }
-    }
-  });
-
-}());
 (function() {
   var P8DS = Ember.Namespace.create();
   window.P8DS = P8DS;
@@ -267,4 +242,30 @@
       jQuery(window).unbind('resize', this._windowResizeListener);
     }
   });
+}());
+
+(function() {
+  var P8Ember = Ember.Namespace.create();
+  window.P8Ember = P8Ember;
+
+}());
+
+
+
+(function() {
+  
+  Ember.Handlebars.registerHelper('p8formatDate', function(path, options) {
+    var rawDate = this.get(path);
+    if(rawDate === undefined) {n
+      return undefined;
+    } 
+    else {
+      if(options.hash.time !== undefined) {
+        return rawDate.p8DeDate(true);
+      } else {
+        return rawDate.p8DeDate();
+      }
+    }
+  });
+
 }());
