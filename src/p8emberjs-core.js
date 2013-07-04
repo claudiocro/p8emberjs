@@ -5,11 +5,13 @@
 }());
 
 
-
+/*
 (function() {
   
   Ember.Handlebars.registerHelper('p8formatDate', function(path, options) {
-    var rawDate = this.get(path);
+    var context = (options.contexts && options.contexts[0]) || this;
+
+    var rawDate = context.get(path);
     if(rawDate === undefined) {
       return undefined;
     } 
@@ -23,3 +25,4 @@
   });
 
 }());
+*/
