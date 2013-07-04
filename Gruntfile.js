@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    awss3: grunt.file.readJSON('aws.s3.synchronize.json'),
     meta: {
         banner: '/*!\n'+
         ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %>' + "\n" +
@@ -81,8 +82,8 @@ module.exports = function(grunt) {
     
     s3: {
       options: {
-        key: 'AKIAIEVHZYBNHNWDOPPQ',
-        secret: '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',
+        key: '<%= awss3.accesskey %>',
+        secret: '<%= awss3.secretkey %>',
         bucket: 'p8builds',
         access: 'public-read'
       },
