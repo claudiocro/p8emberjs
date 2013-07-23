@@ -1,5 +1,7 @@
 language: node_js
 node_js:
-  - 0.8
+  - 0.10
 before_script:
+  - touch ./aws.s3.synchronize.json
+  - echo {} > ./aws.s3.synchronize.json
   - npm install -g grunt-cli
