@@ -20,8 +20,8 @@ module.exports = function(grunt) {
     concat: {
       options: {
         // define a string to put between each file in the concatenated output
-        banner: '<%= meta.banner %>',
-        separator: ';'
+        banner: '<%= meta.banner %>'/*,
+        separator: ';'*/
       },
       dist: {
         src: ['src/**/*.js'],
@@ -67,7 +67,9 @@ module.exports = function(grunt) {
           globals: {
             jQuery: true,
             Ember:true,
-            P8DS:true
+            P8DS:true,
+            P8UI: true,
+            tinymce:true
           }
         }
       } 
