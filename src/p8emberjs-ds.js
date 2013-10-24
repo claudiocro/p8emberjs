@@ -52,9 +52,9 @@
     put: function(o) {
       if(this._idIdx[o.id] === undefined) {
         this.pushObject(o);
-        this._idIdx[o.id] = this.get('length')-1;
+        this._idIdx[o.id] = this.get('content.length')-1;
       } else {
-        this.insertAt(this._idIdx[o.id], o);
+        this.get('content').insertAt(this._idIdx[o.id], o);
       }
     }
   });
