@@ -294,7 +294,7 @@ P8UI.DatetimePickerField = Ember.View.extend({
     if (this._suspendValueChange) { return; }
     var content = this.get("value");
     if(Ember.isEmpty(content)) {
-      this.get("picker").setContent(null);
+      //this.get("picker").setContent(null);
     } else {
       this.$('.datetimepicker').datetimepicker('setValue', this.get('value'));
     }
