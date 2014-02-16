@@ -187,7 +187,69 @@
 
 (function() {
   
-  P8UI.InputValidator = Ember.Mixin.create({
+  
+  function defineProperty(mv, i, invalidProps) {
+    var validations = mv.get('validations');
+    var validationProps = Ember.keys(mv.get('validations'));
+    
+    var invalidProp = 'invalid'+validationProps[i].capitalize();
+    var errorProp = 'error'+validationProps[i].capitalize();
+    var sourceProp = 'source.'+validationProps[i];
+    var idx = i;
+    
+    invalidProps.push(invalidProp);
+    
+    Ember.defineProperty(mv, errorProp, Ember.computed(function() {
+      var error = [];
+      var v = this.get(sourceProp);
+      
+  
+      for(var j=0; j<validations[validationProps[idx]].length; j++) {
+        validations[validationProps[idx]][j](error,v);
+      }
+      return error;
+      
+    }).property(sourceProp));
+    
+    Ember.defineProperty(mv, invalidProp, Ember.computed(function() {
+      return this.get(errorProp+'.length') > 0;
+    }).property(errorProp));
+    
+    Ember.addObserver(mv, invalidProp, mv.evaluateValid);
+    
+  }
+   
+P8UI.InputValidator = Ember.Mixin.create({
+    
+    init: function() {
+      var invalidProps = [];
+      if(!Ember.isEmpty(this.get('validations'))) {
+        var validationProps = Ember.keys(this.get('validations'));
+        for(var i=0; i<validationProps.length; i++) {
+          defineProperty(this, i, invalidProps);
+        }
+      }
+      
+      this._super();
+      this.evaluateValid();
+    },
+    
+    isValid: true,
+    
+    evaluateValid: function() {
+      var validationProps = Ember.keys(this);
+      for(var i=0; i<validationProps.length; i++) {
+        if(this.validationProps[i].indexOf('invalid') == 0) {
+          this.set('isValid', false);
+          return;
+        }
+      }
+      
+      this.set('isValid', true);
+    },    
+    
+    
+    
     source: null,
     invalid: function(field) {
       return this.get('error'+field.capitalize()+".length") > 0;
@@ -209,16 +271,16 @@
   
   
   P8UI.ValidTextField = Ember.TextField.extend({
-    field:null,
+    //field:null,
     validator: null,
     _updateId: null,
     _updateValidation: function() {
       var self = this;
-      this.$().data('tooltip').options.title = this.get('validator').singleErrorMessage(self.get('field'));
+      this.$().data('tooltip').options.title = this.get('validator').singleErrorMessage(self.get('name'));
       Ember.run.cancel(this.get('updateId'));
       var a = Ember.run.later( function(){
         if(!Ember.isEmpty(self.get('validator'))) {
-          if(self.get('validator').invalid(self.get('field'))) {
+          if(self.get('validator').invalid(self.get('name'))) {
             self.$().tooltip('show');
           } else {
         if(!Ember.isEmpty(self.$())) {
@@ -230,10 +292,10 @@
       this.set('updateId', a);
     },
     hasErrors: function() {
-      return !this.get('validator').invalid(this.get('field')); 
+      return !this.get('validator').invalid(this.get('name')); 
     },
     init: function() {
-      this.addObserver('validator.invalid'+this.get('field').capitalize(), this, this._updateValidation);
+      this.addObserver('validator.invalid'+this.get('name').capitalize(), this, this._updateValidation);
       this._super();
     },
     didInsertElement: function() {
@@ -252,7 +314,7 @@
     },
 
     willDestroyElement : function() {
-      this.removeObserver('validator.invalid'+this.get('field').capitalize(), this, this._updateValidation);
+      this.removeObserver('validator.invalid'+this.get('name').capitalize(), this, this._updateValidation);
       this.$().tooltip('destroy');
     }
   });
@@ -267,7 +329,6 @@ P8UI.DatetimePickerField = Ember.View.extend({
   picker: null,
   templateName: 'datetimepicker',
   validator: null,
-  field: null,
   didInsertElement: function() {
     var onChangeDate, self;
     self = this;
