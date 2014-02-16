@@ -239,7 +239,7 @@ P8UI.InputValidator = Ember.Mixin.create({
     evaluateValid: function() {
       var validationProps = Ember.keys(this);
       for(var i=0; i<validationProps.length; i++) {
-        if(this.validationProps[i].indexOf('invalid') == 0) {
+        if(this.validationProps[i].indexOf('invalid') === 0) {
           this.set('isValid', false);
           return;
         }
