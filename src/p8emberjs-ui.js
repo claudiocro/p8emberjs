@@ -325,8 +325,9 @@ P8UI.InputValidator = Ember.Mixin.create({
 
 (function() {
   
-P8UI.DatetimePickerField = Ember.View.extend({
-  picker: null,
+  P8UI.DatetimePickerField = Ember.View.extend({
+    defaultClass: 'span12',
+    picker: null,
   templateName: 'datetimepicker',
   validator: null,
   didInsertElement: function() {
