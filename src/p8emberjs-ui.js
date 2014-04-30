@@ -325,9 +325,10 @@ P8UI.InputValidator = Ember.Mixin.create({
 
 (function() {
   
-  P8UI.DatetimePickerField = Ember.View.extend({
-    defaultClass: 'span12',
-    picker: null,
+P8UI.DatetimePickerField = Ember.View.extend({
+  defaultClass: 'span12',
+  format: "dd.MM.yyyy hh:mm",
+  picker: null,
   templateName: 'datetimepicker',
   validator: null,
   didInsertElement: function() {
@@ -337,7 +338,7 @@ P8UI.InputValidator = Ember.Mixin.create({
       return self.set("value", ev.date);
     };
     var r = this.$('.datetimepicker').datetimepicker({
-      format: "dd.MM.yyyy hh:mm",
+      format: self.get('format'),
       language: 'de',
       collapse: true
     }).on("changeDate", onChangeDate);
