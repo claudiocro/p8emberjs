@@ -16,6 +16,63 @@
     type:"hidden"
   });
   
+  
+  
+  function hasClickable(meta) {
+    return meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== false && Ember.get(meta,'clickable') !== null;
+  }
+  
+  P8UI.CollectionItemViewClass = Ember.View.extend({
+    template: Ember.computed(function(){
+      var bodyTpl = "";
+      for(var i=0; i<this.get('parentView.columns').length; i++) {
+        bodyTpl += '<td class="col-'+i+'">'+this.getValueTmpl(i)+'</td>';
+      }
+      return Ember.Handlebars.compile(bodyTpl);
+    }),
+    
+    actions: {
+      _clickItem: function() {
+        if(this.get('parentView').clickItem !== null) {
+          this.get('parentView').clickItem(this.get('content'));
+        }
+      }
+    },
+    
+   getValueTmpl: function(column) {
+      //console.log(this.get('columnsMeta.'+column+'.headerWidth'));
+      var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column].replace(".",''));
+      var value = '';
+      var action = '_clickItem';
+      if(hasClickable(meta)) {
+        if(Ember.get(meta, 'clickable') !== true) {
+          action = Ember.get(meta, 'clickable');
+        }
+        value += '<a href="#" {{action ' + action + ' target="view"}}>';
+      }
+      
+      if(!Ember.isNone(Ember.get(meta, 'template'))) {
+        value += Ember.get(meta, 'template').apply(this, [meta]);
+      } else {
+        value += '{{view.content.'+this.get('parentView.columns')[column]+'}}';
+      }
+      
+      if(hasClickable(meta)) {
+        value += '</a>';
+      }
+      
+      return value;
+    }
+  });
+  
+  P8UI.CollectionView = Ember.CollectionView.extend({
+    tagName: 'tbody',
+    clickItem: null,
+    columnsMeta: null,
+    itemViewClass: P8UI.CollectionItemViewClass.extend()
+  });
+  
+  
   P8UI.TableView = Ember.ContainerView.extend({
     tagName: 'table',
     content: null,
@@ -23,7 +80,8 @@
     columnsMeta: null,
     classNames: ['p8ui-tableView'],
     childViews: ['headerView', 'bodyView'],
-    clickItem: null
+    clickItem: null,
+    collectionView: P8UI.CollectionView
   });
   
   P8UI.TableView.reopen({
@@ -58,7 +116,7 @@
     }).property(),
     
     bodyView:  Ember.computed(function() {
-      return P8UI.CollectionView.extend({
+      return this.get('collectionView').extend({
         clickItem: this.get('clickItem'),
         columnsMeta: this.get('columnsMeta'),
         content: Ember.computed(function() {
@@ -77,43 +135,7 @@
   
 
 
-  P8UI.CollectionView = Ember.CollectionView.extend({
-    tagName: 'tbody',
-    clickItem: null,
-    columnsMeta: null,
-    itemViewClass: Ember.View.extend({
-      template: Ember.computed(function(){
-        var bodyTpl = "";
-        for(var i=0; i<this.get('parentView.columns').length; i++) {
-          bodyTpl += '<td class="col-'+i+'">'+this.getValueTmpl(i)+'</td>';
-        }
-        return Ember.Handlebars.compile(bodyTpl);
-      }),
-      _clickItem: function() {
-        if(this.get('parentView').clickItem !== null) {
-          this.get('parentView').clickItem(this.get('content'));
-        }
-      },
-      
-     getValueTmpl: function(column) {
-        //console.log(this.get('columnsMeta.'+column+'.headerWidth'));
-        var meta = this.get('parentView.columnsMeta.'+this.get('parentView.columns')[column].replace(".",''));
-        var value = '';
-        if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
-          value += '<a href="#" {{action _clickItem target="view"}}>';
-        }
-        
-        value += '{{view.content.'+this.get('parentView.columns')[column]+'}}';
-        
-        if(meta !== undefined && Ember.get(meta,'clickable') !== undefined && Ember.get(meta,'clickable') !== null) {
-          value += '</a>';
-        }
-        
-        return value;
-      }
-    })
-    
-  });
+
   
   
   P8UI.ScrollView = Ember.View.extend({
@@ -188,7 +210,8 @@
 (function() {
   
   
-  function defineProperty(mv, i, invalidProps) {
+  function defineProperty(mv, i, invalidProps, dependencies) {
+    
     var validations = mv.get('validations');
     var validationProps = Ember.keys(mv.get('validations'));
     
@@ -205,17 +228,29 @@
       
   
       for(var j=0; j<validations[validationProps[idx]].length; j++) {
-        validations[validationProps[idx]][j](error,v);
+        validations[validationProps[idx]][j](error,v, this);
       }
       return error;
       
     }).property(sourceProp));
+    
     
     Ember.defineProperty(mv, invalidProp, Ember.computed(function() {
       return this.get(errorProp+'.length') > 0;
     }).property(errorProp));
     
     Ember.addObserver(mv, invalidProp, mv.evaluateValid);
+    
+    if(!Ember.isEmpty(dependencies)) {
+      
+      var observerf = function(a,b,c) {
+        mv.notifyPropertyChange(errorProp);
+      };
+      
+      for(var x=0; x<dependencies.length; x++) {
+        Ember.addObserver(mv, 'source.'+dependencies[x], observerf);
+      }
+    }
     
   }
    
@@ -226,7 +261,9 @@ P8UI.InputValidator = Ember.Mixin.create({
       if(!Ember.isEmpty(this.get('validations'))) {
         var validationProps = Ember.keys(this.get('validations'));
         for(var i=0; i<validationProps.length; i++) {
-          defineProperty(this, i, invalidProps);
+          if(validationProps[i] !== '_dependencies') {            
+            defineProperty(this, i, invalidProps, this.get('validations._dependencies.'+validationProps[i]));
+          }
         }
       }
       
@@ -276,7 +313,7 @@ P8UI.InputValidator = Ember.Mixin.create({
     _updateId: null,
     _updateValidation: function() {
       var self = this;
-      this.$().data('tooltip').options.title = this.get('validator').singleErrorMessage(self.get('name'));
+      this.$().data('bs.tooltip').options.title = this.get('validator').singleErrorMessage(self.get('name'));
       Ember.run.cancel(this.get('updateId'));
       var a = Ember.run.later( function(){
         if(!Ember.isEmpty(self.get('validator'))) {
