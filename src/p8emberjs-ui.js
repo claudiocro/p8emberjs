@@ -73,7 +73,7 @@
   });
   
   
-  P8UI.TableView = Ember.ContainerView.extend({
+  P8UI.TableView = Ember.ContainerView.extend(Ember.I18n.TranslateableProperties, {
     tagName: 'table',
     content: null,
     columns: null,
@@ -85,7 +85,8 @@
   });
   
   P8UI.TableView.reopen({
-    headerView: Ember.computed(function() {
+  headerView: Ember.computed(function() {
+      var self = this;
       return Ember.View.extend({
         tagName: 'thead',
         columns: get(this, 'columns'),
@@ -101,11 +102,13 @@
             
             bodyTpl += '>';
             
-            if(get(this, 'columnsMeta.'+col+'.headerValue') !== undefined && get(this, 'columnsMeta.'+col+'.headerValue') !== null) {
-              bodyTpl += get(this, 'columnsMeta.'+col+'.headerValue');
-            } else {              
-              bodyTpl += col;
+            if(!Ember.isEmpty(get(this, 'columnsMeta.'+col+'.headerTranslation'))) {
+              
+              bodyTpl += get(self,get(this, 'columnsMeta.'+col+'.headerTranslation'));
             }
+            else if(!Ember.isEmpty(get(this, 'columnsMeta.'+col+'.headerValue'))) {
+              bodyTpl += get(this, 'columnsMeta.'+col+'.headerValue');
+            } 
             
             bodyTpl += '</th>';
           }
@@ -316,13 +319,17 @@ P8UI.InputValidator = Ember.Mixin.create({
       this.$().data('bs.tooltip').options.title = this.get('validator').singleErrorMessage(self.get('name'));
       Ember.run.cancel(this.get('updateId'));
       var a = Ember.run.later( function(){
+        if(self.get('isDestroyed') === true){
+          return;
+        }
+        
         if(!Ember.isEmpty(self.get('validator'))) {
           if(self.get('validator').invalid(self.get('name'))) {
             self.$().tooltip('show');
           } else {
-        if(!Ember.isEmpty(self.$())) {
-          self.$().tooltip('hide');
-        }
+            if(!Ember.isEmpty(self.$())) {
+              self.$().tooltip('hide');
+            }
           }
         }
       },300);
@@ -365,6 +372,7 @@ P8UI.InputValidator = Ember.Mixin.create({
 P8UI.DatetimePickerField = Ember.View.extend({
   defaultClass: 'span12',
   format: "dd.MM.yyyy hh:mm",
+  pickDate: true,
   picker: null,
   templateName: 'datetimepicker',
   validator: null,
@@ -377,7 +385,8 @@ P8UI.DatetimePickerField = Ember.View.extend({
     var r = this.$('.datetimepicker').datetimepicker({
       format: self.get('format'),
       language: 'de',
-      collapse: true
+      collapse: true,
+      pickDate: self.get('pickDate')
     }).on("changeDate", onChangeDate);
     this.set('picker', r);
     this.suspendValueChange(function() {
