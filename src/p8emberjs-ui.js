@@ -26,7 +26,16 @@
     template: Ember.computed(function(){
       var bodyTpl = "";
       for(var i=0; i<this.get('parentView.columns').length; i++) {
+        var col = this.get('parentView.columns')[i].replace(".",'');
+        if(!Ember.isEmpty(get(this, 'parentView.columnsMeta.'+col+'.preCol'))) {
+          bodyTpl += get(this, 'parentView.columnsMeta.'+col+'.preCol');
+        }
+        
         bodyTpl += '<td class="col-'+i+'">'+this.getValueTmpl(i)+'</td>';
+        
+        if(!Ember.isEmpty(get(this, 'parentView.columnsMeta.'+col+'.postCol'))) {
+          bodyTpl += get(this, 'parentView.columnsMeta.'+col+'.postCol');
+        }
       }
       return Ember.Handlebars.compile(bodyTpl);
     }),
@@ -95,6 +104,9 @@
           var bodyTpl = "<tr>";
           for(var i=0; i<this.get('columns').length; i++) {
             var col = this.get('columns')[i].replace(".",'');
+            if(!Ember.isEmpty(get(this, 'columnsMeta.'+col+'.preCol'))) {
+              bodyTpl += get(this, 'columnsMeta.'+col+'.preCol');
+            }
             bodyTpl += '<th class="col-'+i+'"';
             if(get(this, 'columnsMeta.'+col+'.headerWidth') !== undefined && get(this, 'columnsMeta.'+col+'.headerWidth')) {
               bodyTpl += ' style="width: '+get(this, 'columnsMeta.'+col+'.headerWidth')+';"';  
@@ -111,6 +123,9 @@
             } 
             
             bodyTpl += '</th>';
+            if(!Ember.isEmpty(get(this, 'columnsMeta.'+col+'.postCol'))) {
+              bodyTpl += get(this, 'columnsMeta.'+col+'.postCol');
+            }
           }
           bodyTpl += "</tr>";
           return Ember.Handlebars.compile(bodyTpl);
