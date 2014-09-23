@@ -240,18 +240,38 @@
     
     invalidProps.push(invalidProp);
     
-    Ember.defineProperty(mv, errorProp, Ember.computed(function() {
+    /*Ember.defineProperty(mv, errorProp, Ember.computed(function() {
       var error = [];
       var v = this.get(sourceProp);
       
   
       for(var j=0; j<validations[validationProps[idx]].length; j++) {
-        validations[validationProps[idx]][j](error,v, this);
+        validations[validationProps[idx]][j](error,v, this, errorProp);
       }
       return error;
       
-    }).property(sourceProp));
+    }).property(sourceProp));*/
     
+    Ember.addObserver(mv, sourceProp, function(a,b,c) {
+      var error = [];
+      var v = this.get(sourceProp);
+      
+  
+      for(var j=0; j<validations[validationProps[idx]].length; j++) {
+        validations[validationProps[idx]][j](error,v, this, errorProp);
+      }
+      this.set(errorProp, error);
+    });
+    
+    var errorValue;
+    Ember.defineProperty(mv, errorProp, Ember.computed(function(v) {
+      if(Ember.isEmpty(v)){
+        return errorValue;
+      }
+      else {
+        errorValue = v;
+      }
+    }).property());
     
     Ember.defineProperty(mv, invalidProp, Ember.computed(function() {
       return this.get(errorProp+'.length') > 0;
@@ -340,7 +360,9 @@ P8UI.InputValidator = Ember.Mixin.create({
         
         if(!Ember.isEmpty(self.get('validator'))) {
           if(self.get('validator').invalid(self.get('name'))) {
-            self.$().tooltip('show');
+            if(self.$().is(":focus")) {
+              self.$().tooltip('show');
+            }
           } else {
             if(!Ember.isEmpty(self.$())) {
               self.$().tooltip('hide');
